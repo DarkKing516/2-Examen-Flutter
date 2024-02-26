@@ -13,113 +13,357 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          primarySwatch: Colors.red,
+          fontFamily: 'Raleway',
+          colorScheme: const ColorScheme.dark()),
+      debugShowCheckedModeBanner: false,
+      home: const RegisterPage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+enum SinginCharacter { femenino, masculino, otro }
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key, required this.title});
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _RegisterPageState extends State<RegisterPage> {
+  SinginCharacter? _sex = SinginCharacter.femenino;
+  bool _obscureText = true;
+  bool _obscureTextC = true;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  String _nombre = '';
+  final _formKey = GlobalKey<FormState>();
+  String _password = '';
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+        body: SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.only(top: 40, left: 30, right: 30),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              child: const Text(
+                'Registrarse',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Text('¡Ya puedes registrarte, bienvenido!'),
             ),
+            Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                        padding: const EdgeInsets.only(top: 30),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              hintText: 'Nombre',
+                              hintStyle:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                              fillColor: Colors.redAccent.shade200,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              filled: true),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Por favor ingrese su nombre';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            setState(() {
+                              _nombre = value.toString();
+                            });
+                          },
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              hintText: 'Apellidos',
+                              hintStyle:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                              fillColor: Colors.redAccent.shade200,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              filled: true),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor digite su apellido';
+                            }
+                          },
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Row(
+                          children: <Widget>[
+                            const Text(
+                              'Sexo:',
+                              style: TextStyle(
+                                fontSize: 15,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Radio<SinginCharacter>(
+                                  activeColor: Colors.red,
+                                  value: SinginCharacter.femenino,
+                                  groupValue: _sex,
+                                  onChanged: (SinginCharacter? value) {
+                                    setState(() {
+                                      _sex = value;
+                                    });
+                                  },
+                                ),
+                                const Text('Femenino')
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio<SinginCharacter>(
+                                  activeColor: Colors.red,
+                                  value: SinginCharacter.masculino,
+                                  groupValue: _sex,
+                                  onChanged: (SinginCharacter? value) {
+                                    setState(() {
+                                      _sex = value;
+                                    });
+                                  },
+                                ),
+                                const Text('Masculino')
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio<SinginCharacter>(
+                                  activeColor: Colors.red,
+                                  value: SinginCharacter.otro,
+                                  groupValue: _sex,
+                                  onChanged: (SinginCharacter? value) {
+                                    setState(() {
+                                      _sex = value;
+                                    });
+                                  },
+                                ),
+                                const Text('Otro')
+                              ],
+                            ),
+                          ],
+                        )),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              hintText: 'Correo',
+                              hintStyle:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                              fillColor: Colors.redAccent.shade200,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              filled: true),
+                          validator: (value) {
+                            String pattern =
+                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                            RegExp regExp = RegExp(pattern);
+                            if (value!.isEmpty) {
+                              return "El correo es necesario";
+                            } else if (!regExp.hasMatch(value)) {
+                              return "Correo invalido";
+                            } else {
+                              return null;
+                            }
+                          },
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          TextFormField(
+                            obscureText: _obscureText,
+                            onChanged: (value) {
+                              setState(() {
+                                _password = value;
+                              });
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Contraseña',
+                              hintStyle:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                              fillColor: Colors.redAccent.shade200,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              filled: true,
+                            ),
+                            validator: (value) {
+                              String pattern =
+                                  r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{10,}$';
+                              RegExp regExp = RegExp(pattern);
+                              if (value!.isEmpty) {
+                                return "La contraseña es necesaria";
+                              } else if (!regExp.hasMatch(value)) {
+                                return "La contraseña debe tener al menos 10 caracteres, 1 letra mayúscula, 1 minúscula y 1 número. Además puede contener caracteres especiales.";
+                              } else if (value.length >= 20) {
+                                return "La contraseña debe tener menos de 20 caracteres";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                            icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          TextFormField(
+                            obscureText: _obscureTextC,
+                            decoration: InputDecoration(
+                              hintText: 'Confirmar contraseña',
+                              hintStyle:
+                                  const TextStyle(fontWeight: FontWeight.w600),
+                              fillColor: Colors.redAccent.shade200,
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 0, style: BorderStyle.none),
+                              ),
+                              filled: true,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Confirmar la Contraseña es necesario';
+                              }
+                              if (value != _password) {
+                                return 'Las contraseñas no coinciden';
+                              }
+                              return null;
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscureTextC = !_obscureTextC;
+                              });
+                            },
+                            icon: Icon(
+                              _obscureTextC
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 45,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(SnackBar(
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: const <Widget>[
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: Color.fromARGB(255, 0, 0, 0),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "Usuario registrado correctamente",
+                                          style: TextStyle(
+                                              color: Color.fromARGB(255, 0, 0, 0)),
+                                        )
+                                      ],
+                                    ),
+                                    duration:
+                                        const Duration(milliseconds: 2000),
+                                    width: 300,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0, vertical: 10),
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3.0),
+                                    ),
+                                    backgroundColor:
+                                        Color.fromARGB(255, 255, 0, 0),
+                                  ));
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Colors.black, // background (button) color
+                                foregroundColor:
+                                    Colors.red, // foreground (text) color
+                              ),
+                              child: const Text('Registrarse')),
+                        )),
+                  ],
+                ))
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+    ));
   }
 }
